@@ -17,6 +17,17 @@ console.log("connecting to db", DB)
 
 //Dependencies (chat-gpt, middleware, etc)
 
+//Middleware - handles stuff for your requests
+
+//The slides don't have this, but basically tells node how to handle different data formats in requests
+const bodyParser = require('body-parser');
+// parse application/json, basically parse incoming Request Object as a JSON Object 
+app.use(bodyParser.json());
+// parse application/x-www-form-urlencoded, basically can only parse incoming Request Object if strings or arrays
+app.use(bodyParser.urlencoded({ extended: false }));
+// combines the 2 above, then you can parse incoming Request Object if object, with nested objects, or generally any type.
+app.use(bodyParser.urlencoded({ extended: true }));
+
 //Here are the endpoints that clients (devices) can make requests to
 //registering an endpoint to handle request and response
 //registered only called when a client makes a http request
@@ -47,76 +58,8 @@ app.get("/animals/:animal", (req, res) => {
     res.send(req.params.animal)
 })
 
-//query params more used for filtering or data that is not parent child
-// /tacos?protein=beef&hasClianto=false
-//another route called taco to handle get requests
-app.get("/tacos", (req, res) => {
-    //route params
-    console.log("GET /tacos route params", req.params)
-    //logging the request i got
-    console.log("GET /tacos query params", req.query)
-    //will be empty on GET, but useful for POST requests
-    console.log("GET /tacos body", req.body)
-    let tacos =  [
-        {
-        "name": "Classic Beef Taco",
-        "ingredients": {
-            "shell": "corn tortilla",
-            "filling": "seasoned ground beef",
-            "toppings": ["lettuce", "cheese", "salsa", "sour cream"],
-            "extras": ["guacamole", "jalapeños"]
-        },
-        "price": 2.99,
-        "calories": 350
-        },
-        {
-        "name": "Grilled Chicken Taco",
-        "ingredients": {
-            "shell": "flour tortilla",
-            "filling": "grilled chicken",
-            "toppings": ["lettuce", "tomato", "onions", "cilantro"],
-            "extras": ["salsa verde", "sour cream"]
-        },
-        "price": 3.49,
-        "calories": 300
-        },
-        {
-        "name": "Vegetarian Taco",
-        "ingredients": {
-            "shell": "whole wheat tortilla",
-            "filling": "spiced black beans",
-            "toppings": ["avocado", "lettuce", "tomato", "cheese"],
-            "extras": ["salsa", "lime wedges"]
-        },
-        "price": 2.79,
-        "calories": 280
-        },
-        {
-        "name": "Fish Taco",
-        "ingredients": {
-            "shell": "corn tortilla",
-            "filling": "fried cod fish",
-            "toppings": ["cabbage slaw", "pico de gallo", "chipotle mayo"],
-            "extras": ["lime wedges"]
-        },
-        "price": 4.29,
-        "calories": 400
-        },
-        {
-        "name": "Shrimp Taco",
-        "ingredients": {
-            "shell": "flour tortilla",
-            "filling": "grilled shrimp",
-            "toppings": ["cabbage slaw", "avocado", "cilantro", "sour cream"],
-            "extras": ["chipotle mayo", "lime wedges"]
-        },
-        "price": 4.99,
-        "calories": 320
-        }
-    ]
-      
-    res.send(tacos)
-})
+//this function prefixes routes with the first arg
+app.use("/tacos", require('./controllers/tacos'))
 
 //GET request to monsters => return a list of monsters
 app.get('/monsters', (req, res) => {
@@ -171,9 +114,29 @@ app.get('/monsters', (req, res) => {
     
 })
 
+//sending html as response
+app.get('/colors/:color', (req, res) => {
+    res.send(`
+    <body>
+        <h1>Hello</h1>
+    </body
+    `)
+})
+
+//for the /auth route use this controller
+//prefix these routes with /auth
+app.use("/auth", require("./controllers/auth"))
+
 function capitalizeFirstLetter(string) {
     return string[0].toUpperCase() + string.slice(1);
 }
+
+//handle any pages not found
+//if you don't ,app will crash for users that spell a page wrong
+app.get("*", (req, res) => {
+    console.log(req.params)
+    res.send("Page not found")
+})
 
 //Start the api
 //Listen for requests to the api
