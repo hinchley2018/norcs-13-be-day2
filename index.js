@@ -118,6 +118,63 @@ app.get("/tacos", (req, res) => {
     res.send(tacos)
 })
 
+//GET request to monsters => return a list of monsters
+app.get('/monsters', (req, res) => {
+    let monsters = [
+        {
+          "name": "Vampire",
+          "description": "A blood-sucking immortal creature with fangs and a fear of sunlight.",
+          "powers": ["Immortality", "Superhuman strength", "Hypnotic charm"],
+          "weaknesses": ["Sunlight", "Wooden stakes", "Garlic"]
+        },
+        {
+          "name": "Werewolf",
+          "description": "A human who transforms into a wolf-like creature during a full moon.",
+          "powers": ["Enhanced strength", "Heightened senses", "Regeneration"],
+          "weaknesses": ["Full moon", "Silver bullets", "Wolfsbane"]
+        },
+        {
+          "name": "Zombie",
+          "description": "A reanimated corpse with a hunger for human flesh.",
+          "powers": ["Undead resilience", "Infectious bite"],
+          "weaknesses": ["Headshot", "Decay"]
+        },
+        {
+          "name": "Witch",
+          "description": "A spellcasting practitioner of dark magic with a pointy hat and broomstick.",
+          "powers": ["Spellcasting", "Potion brewing", "Flight"],
+          "weaknesses": ["Water", "Salt circles", "Silver"]
+        },
+        {
+          "name": "Mummy",
+          "description": "A preserved corpse wrapped in bandages, cursed to guard ancient tombs.",
+          "powers": ["Immortality", "Bandage manipulation"],
+          "weaknesses": ["Unwrapping", "Fire", "Holy artifacts"]
+        }
+    ]
+
+    //how to get query that has power in it?
+    console.log("GET /monster query params", req.query)
+
+    //filter monsters by their power if that param exists
+    if(req.query.power){
+        let p = capitalizeFirstLetter(req.query.power) 
+        console.log(p)
+        let filteredMonsters = monsters.filter(m => m.powers.includes( p))
+        res.send(filteredMonsters)
+    }
+    else{
+        
+        res.send(monsters)
+    }
+
+    
+})
+
+function capitalizeFirstLetter(string) {
+    return string[0].toUpperCase() + string.slice(1);
+}
+
 //Start the api
 //Listen for requests to the api
 app.listen(PORT, () => {
