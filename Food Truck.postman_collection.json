@@ -72,6 +72,34 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Create taco",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Birria Taco\",\r\n    \"ingredients\": {\r\n        \"shell\": \"corn tortilla\",\r\n        \"filling\": \"seasoned ground beef\",\r\n        \"toppings\": [\"lettuce\", \"cheese\", \"salsa\", \"sour cream\"],\r\n        \"extras\": [\"guacamole\", \"jalapeños\"]\r\n    },\r\n    \"price\": 5.99,\r\n    \"calories\": 650\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/tacos",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"tacos"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
